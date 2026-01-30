@@ -1,92 +1,165 @@
-# Creepy Cuties — Weapon Crafting Prototype (GitHub Pages)
+# Creepy Cuties — Weapon Crafting Prototype (Plain JS, No NPM)
 
-A small, **GitHub Pages-hostable** React demo that showcases:
+This is a **static** React demo that runs with **CDN scripts** (no Node, no npm, no build step).  
+It includes:
 
-- The **Weapon Crafting ↔ Narrative Prototype** (Boss Arena / Sarah’s Lab / Sam’s Weaponry)
-- A **Tree Presentation** (goal dependencies, sourcing paths, decomposition)
+- **Weapon Crafting ↔ Narrative Prototype** (Boss Arena / Sarah’s Lab / Sam’s Weaponry)
+- **Crafting Trees Presentation** (Goal tree / Sourcing tree / Decomposition tree)
 
-Built with **Vite + React + TypeScript**.
+## Run locally
 
----
+Just open `index.html` in a browser.
 
-## Demo Sections
-
-The app has two views:
-
-1. **Prototype**
-   - Boss Arena: sequential boss unlocks, refights, drops + coins, Disease 2nd win grants **Wooden Pole**
-   - Sarah’s Lab: token/item crafting + decomposition
-   - Sam’s Weaponry: weapon crafting + decomposition
-
-2. **Trees**
-   - Slide-style presentation of:
-     - Helbard Goal Tree
-     - Resource Sourcing Tree
-     - Decomposition Tree
-
----
-
-## Local Development
-
-### Requirements
-
-- Node.js 18+ (Node 20 recommended)
-
-### Run
-
-```bash
-npm install
-npm run dev
-```
-
-Open the printed local URL.
-
-### Build
-
-```bash
-npm run build
-npm run preview
-```
-
----
+> Tip: Some browsers block `file://` imports in strict environments. If anything doesn't load, run a tiny local server:
+>
+> - Python: `python -m http.server 8080`
+> - Then open: `http://localhost:8080`
 
 ## Deploy to GitHub Pages
 
-This repo includes a GitHub Actions workflow that builds and deploys the `dist/` folder to GitHub Pages.
+1. Create a GitHub repo and push these files.
+2. In GitHub: **Settings → Pages**
+3. Under **Build and deployment**:
+   - **Source:** `Deploy from a branch`
+   - **Branch:** `main` (or `master`) and **Folder:** `/ (root)`
+4. Save. Your demo will be available at:
+   - `https://<username>.github.io/<repo>/`
 
-### 1) Create a GitHub repo
+## Files
 
-- Create a new repo (e.g. `creepycuties.weapon-carfting.github.io`)
-- Push this project to the repo’s `main` branch
+- `index.html` — loads React, ReactDOM, Babel, and the app
+- `app.jsx` — the full demo (two views)
+- `style.css` — minimal global styles
 
-### 2) Enable GitHub Pages via Actions
+## Notes
 
-In GitHub:
+- Babel runs in the browser to transform JSX. This is fine for a demo; for production, use a build step.
 
-- **Settings → Pages**
-- Under **Build and deployment** choose:
-  - **Source:** `GitHub Actions`
+# Weapon Crafting ↔ Narrative Prototype
 
-### 3) Push to `main`
-
-Any push to `main` triggers deployment.
-
-After the workflow finishes, your site will be available at:
-
-- `https://<username>.github.io/<repo>/`
+This prototype demonstrates a small slice of the **weapon crafting system** and how it connects to the **narrative/relationship system** via **NPC Rank Items**.
 
 ---
 
-## GitHub Pages Base Path (important)
+## Core Concept
 
-GitHub Pages serves project sites under `/<repo>/`.
+- The player moves between **three places**:
+  - **Boss Arena**
+  - **Sarah’s Lab**
+  - **Sam’s Weaponry**
+- The player fights **four bosses sequentially** in the Boss Arena.
+  - Defeating a boss unlocks the next boss.
+  - Previously defeated bosses can be fought again to farm resources.
+- Each boss has a **unique droppable token**.
+- Some fights can also yield **NPC Rank Items** (on repeat defeats).
+  - NPC Rank Items represent relationship milestones.
+  - Obtaining them increases the player’s relationship level with the relevant NPC.
 
-This project automatically detects the repo name in CI and sets Vite’s `base` path accordingly in `vite.config.ts`:
+---
 
-- Local dev: base is `/`
-- GitHub Actions build: base becomes `/<repo>/`
+## Locations
 
-So you usually **do not need** to edit anything.
+### 1) Boss Arena
+- Hosts sequential boss fights.
+- Allows refights for resource farming.
+- Victory rewards:
+  1. Boss token(s)
+  2. Coins
+  3. NPC Rank Item *(only if this is the second time defeating that boss)*
+
+### 2) Sarah’s Lab
+- Allows the player to:
+  - **Buy/Craft tokens** using recipes + coins
+  - **Craft NPC Rank Items** (prototype includes Wooden Pole)
+  - **Decompose** items/tokens back into their ingredient items *(coins are sunk)*
+
+### 3) Sam’s Weaponry
+- Allows the player to:
+  - **Craft weapons** using tokens/items + coins
+  - **Decompose** crafted weapons back into their ingredient items *(coins are sunk)*
+
+---
+
+## Boss Sequence & Token Drops
+
+Boss fights unlock sequentially:
+
+1. **Wound** → drops **Wound’s Feet**
+2. **Toxic** → drops **Toxic’s Tongue**
+3. **Shiver & Fever** *(two bosses in one fight)* → drops:
+   - **Shiver’s Wing**
+   - **Fever’s Fang**
+4. **Disease** → drops **Disease’s Horn**
+
+---
+
+## Refights & NPC Rank Items (Prototype Scope)
+
+- The **first** time you defeat a boss, you receive:
+  - Boss token(s) + coins
+- The **second** time you defeat a boss, you receive:
+  - Boss token(s) + coins + **NPC Rank Item**
+
+### NPC Rank Item in this prototype
+- **Wooden Pole**
+  - Obtained after defeating **Disease** for the **second time**
+
+---
+
+## Rewards After a Boss Defeat
+
+After winning a boss fight, the player receives:
+
+1. The boss’s unique droppable token(s)
+2. Coins
+3. An NPC Rank Item *(only on the second defeat of that boss)*
+
+---
+
+## Sam’s Weapon Crafting Recipes
+
+Sam crafts three weapons:
+
+1. **Spear**
+   - **Wound’s Feet** + **Wooden Pole** + **400 coins**
+2. **Axe**
+   - **Disease’s Horn** + **Wooden Pole** + **500 coins**
+3. **Helbard**
+   - **Spear** + **Axe** + **Shiver’s Wing** + **1200 coins**
+
+---
+
+## Sarah’s Lab Recipes (Tokens & Rank Items)
+
+Sarah can buy/craft tokens and rank items using coins:
+
+1. **Wound’s Feet**
+   - **100 coins**
+2. **Wooden Pole**
+   - **Wound’s Feet** + **Shiver’s Wing** + **Disease’s Horn** + **300 coins**
+3. **Toxic’s Tongue**
+   - **Wound’s Feet** + **200 coins**
+4. **Shiver’s Wing**
+   - **Wound’s Feet** + **Toxic’s Tongue** + **300 coins**
+5. **Fever’s Fang**
+   - **Wound’s Feet** + **Toxic’s Tongue** + **300 coins**
+6. **Disease’s Horn**
+   - **Shiver’s Wing** + **Fever’s Fang** + **Wound’s Feet** + **Toxic’s Tongue** + **500 coins**
+
+✅ This means the player can obtain **tokens** and even **NPC Rank Items** using **coins**, not only boss drops.
+
+---
+
+## Decomposition
+
+**Decomposition** allows the player to break an item/token into its **ingredient items** based on its recipe.
+
+- Decomposition can be performed in:
+  - **Sarah’s Lab**
+  - **Sam’s Weaponry**
+- Coins are **not refunded**
+  - Decomposition returns **only the ingredient items**
+  - Coins act as an economy sink
 
 ---
 
@@ -106,123 +179,3 @@ So you usually **do not need** to edit anything.
 5. Repeat fights and crafting to progress both:
    - **combat power** (weapons)
    - **narrative relationships** (NPC Rank Items)
-
-
-#### Tech Doc:
-# Creepy Cuties — Weapon Crafting Prototype (GitHub Pages)
-
-A small, **GitHub Pages-hostable** React demo that showcases:
-
-- The **Weapon Crafting ↔ Narrative Prototype** (Boss Arena / Sarah’s Lab / Sam’s Weaponry)
-- A **Tree Presentation** (goal dependencies, sourcing paths, decomposition)
-
-Built with **Vite + React + TypeScript**.
-
----
-
-## Demo Sections
-
-The app has two views:
-
-1. **Prototype**
-   - Boss Arena: sequential boss unlocks, refights, drops + coins, Disease 2nd win grants **Wooden Pole**
-   - Sarah’s Lab: token/item crafting + decomposition
-   - Sam’s Weaponry: weapon crafting + decomposition
-
-2. **Trees**
-   - Slide-style presentation of:
-     - Helbard Goal Tree
-     - Resource Sourcing Tree
-     - Decomposition Tree
-
----
-
-## Local Development
-
-### Requirements
-
-- Node.js 18+ (Node 20 recommended)
-
-### Run
-
-```bash
-npm install
-npm run dev
-```
-
-Open the printed local URL.
-
-### Build
-
-```bash
-npm run build
-npm run preview
-```
-
----
-
-## Deploy to GitHub Pages
-
-This repo includes a GitHub Actions workflow that builds and deploys the `dist/` folder to GitHub Pages.
-
-### 1) Create a GitHub repo
-
-- Create a new repo (e.g. `cc-crafting-prototype`)
-- Push this project to the repo’s `main` branch
-
-### 2) Enable GitHub Pages via Actions
-
-In GitHub:
-
-- **Settings → Pages**
-- Under **Build and deployment** choose:
-  - **Source:** `GitHub Actions`
-
-### 3) Push to `main`
-
-Any push to `main` triggers deployment.
-
-After the workflow finishes, your site will be available at:
-
-- `https://<username>.github.io/<repo>/`
-
----
-
-## GitHub Pages Base Path (important)
-
-GitHub Pages serves project sites under `/<repo>/`.
-
-This project automatically detects the repo name in CI and sets Vite’s `base` path accordingly in `vite.config.ts`:
-
-- Local dev: base is `/`
-- GitHub Actions build: base becomes `/<repo>/`
-
-So you usually **do not need** to edit anything.
-
----
-
-## Project Structure
-
-```
-.
-├─ .github/workflows/deploy.yml
-├─ index.html
-├─ src/
-│  ├─ App.tsx
-│  ├─ main.tsx
-│  ├─ styles.css
-│  └─ components/
-│     ├─ WeaponCraftingNarrativePrototype.tsx
-│     └─ CraftingTreesPresentation.tsx
-├─ vite.config.ts
-├─ tsconfig*.json
-└─ package.json
-```
-
----
-
-## Notes
-
-- Boss coin rewards are **prototype placeholders**.
-- **Decomposition returns only items** (ingredient tokens/items). Coins are **not** returned.
-- Only one NPC Rank Item is modeled: **Wooden Pole**.

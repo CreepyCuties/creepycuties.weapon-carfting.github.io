@@ -1,0 +1,9 @@
+/* Minimal global styles; most UI is inline to keep this no-build prototype portable. */
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: #050507;
+}
+* { box-sizing: border-box; }
