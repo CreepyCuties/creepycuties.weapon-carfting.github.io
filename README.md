@@ -56,7 +56,7 @@ This repo includes a GitHub Actions workflow that builds and deploys the `dist/`
 
 ### 1) Create a GitHub repo
 
-- Create a new repo (e.g. `cc-crafting-prototype`)
+- Create a new repo (e.g. `creepycuties.weapon-carfting.github.io`)
 - Push this project to the repo’s `main` branch
 
 ### 2) Enable GitHub Pages via Actions
